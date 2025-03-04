@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+google-cloud-language
+google-cloud-vision
+python-multipart
+python-dotenv
