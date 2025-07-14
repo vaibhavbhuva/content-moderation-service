@@ -462,10 +462,5 @@ services:
 8. Push to the branch (`git push origin feature/amazing-feature`)
 9. Open a Pull Request
 
-### Code Style
-- Follow PEP 8 Python style guidelines
-- Use type hints for function parameters and returns
-- Add docstrings for all public functions and classes
-- Write comprehensive tests for new features
 
 
