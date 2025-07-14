@@ -449,65 +449,7 @@ services:
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-## 🧪 Testing
 
-### Running Tests
-
-```bash
-# Run all tests
-python -m pytest
-
-# Run specific test files
-python test_chunking_strategy.py
-python test_confidence_fix.py
-
-# Run with verbose output
-python -m pytest -v
-```
-
-### Test Coverage
-
-The project includes tests for:
-- Confidence score calculations and aggregation
-- API endpoint functionality
-- Error handling scenarios
-
-## 🚀 Performance Optimizations
-
-### GPU Acceleration
-- Automatic GPU detection and usage for transformer models
-- Fallback to CPU if GPU unavailable
-- Optimized batch processing for chunked texts
-
-### Caching
-- Model loading optimization with singleton patterns
-- Rate limiter with memory-based storage
-- Language detection result caching
-
-### Automatic Chunking Optimizations
-- Intelligent overlap sizing for context preservation
-- Token-based chunking for accurate model input sizing
-- Automatic chunking threshold based on text length
-
-## 📈 Roadmap
-
-### Planned Features
-- [ ] **Image Moderation**: Google Cloud Vision API integration
-- [ ] **Video Content Analysis**: Frame-by-frame content moderation
-- [ ] **Real-time Streaming**: WebSocket support for live content analysis
-- [ ] **Custom Model Training**: Fine-tuning capabilities for domain-specific content
-- [ ] **Analytics Dashboard**: Usage statistics and moderation insights
-- [ ] **Webhook Support**: Real-time notifications for moderation results
-
-### Performance Improvements
-- [ ] **Redis Caching**: Distributed caching for better performance
-- [ ] **Database Integration**: PostgreSQL/MongoDB support for result storage
-- [ ] **Kubernetes Deployment**: Cloud-native deployment configurations
-- [ ] **Load Balancing**: Horizontal scaling support
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these guidelines:
 
 ### Development Setup
 1. Fork the repository
