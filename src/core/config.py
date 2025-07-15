@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     MAX_CHUNKS_PER_TEXT: int = 10  # maximum chunks to process per text
     
     # Rate limiting settings
-    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_ENABLED: bool = False
     RATE_LIMIT_REQUESTS: int = 100  # requests per time window
     RATE_LIMIT_WINDOW: int = 60     # time window in seconds
     RATE_LIMIT_PER_ENDPOINT: bool = True  # separate limits per endpoint
