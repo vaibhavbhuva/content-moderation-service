@@ -1,16 +1,15 @@
-from pydantic import BaseModel
-from typing import List
+"""
+Moderation schemas - Text moderation only.
+"""
 
-class TextModerationRequest(BaseModel):
+from typing import List
+from .base import BaseModel as BaseSchema
+class TextModerationRequest(BaseSchema):
+    """Request model for text moderation."""
     text: str
 
-class TextModerationResponse(BaseModel):
+
+class TextModerationResponse(BaseSchema):
+    """Response model for text moderation."""
     category: str
     confidence: float
-
-class ImageModerationResponse(BaseModel):
-    adult: str
-    medical: str
-    spoofed: str
-    violence: str
-    racy: str
