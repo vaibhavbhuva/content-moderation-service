@@ -16,31 +16,39 @@ class Settings(BaseSettings):
     
     # Basic API settings
     PROJECT_NAME: str = "Content Moderation API"
+    PROJECT_VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
     LOG_LEVEL: str = "INFO"
-    
-    # Gemini API settings
-    GEMINI_API_KEY: Optional[str] = None
+
+    # Kafka Settings
+    KAFKA_ENABLED: bool = True
+    KAFKA_BOOTSTRAP_SERVERS: str = "localhost:9092"
+    KAFKA_MODERATION_RESULTS_TOPIC: str = "dev.content.profanity"
+    KAFKA_RETRIES: int = 3
+    KAFKA_RETRY_BACKOFF_MS: int = 100
+
+    # KAFKA_ACKS: str = "all"
+    # KAFKA_BATCH_SIZE: int = 16384
+    # KAFKA_LINGER_MS: int = 10
+    # KAFKA_BUFFER_MEMORY: int = 33554432
+    # KAFKA_MAX_REQUEST_SIZE: int = 1048576
+
+    # Profanity - Transformer Models
+    ENGLISH_TRANSFORMER_MODEL: str = "unitary/toxic-bert"
+    INDIC_TRANSFORMER_MODEL: str = "Hate-speech-CNERG/indic-abusive-allInOne-MuRIL"
+    LANGUAGE_DETECT_MODEL: str = "ZheYu03/xlm-r-langdetect-model"
     
     # Model settings
     MAX_TEXT_LENGTH: int = 500
-    MIN_TEXT_LENGTH: int = 5
-    LANGUAGE_DETECTION_SAMPLE_SIZE: int = 300  # characters to use for language detection
     
     # Text chunking settings
     CHUNKING_ENABLED: bool = True
     CHUNK_SIZE: int = 500          # tokens per chunk
-    CHUNK_OVERLAP: int = 12        # overlap between chunks (tokens)
+    CHUNK_OVERLAP: int = 100       # overlap between chunks (tokens)
     MAX_CHUNKS_PER_TEXT: int = 10  # maximum chunks to process per text
-    
-    # Rate limiting settings
-    RATE_LIMIT_ENABLED: bool = False
-    RATE_LIMIT_REQUESTS: int = 100  # requests per time window
-    RATE_LIMIT_WINDOW: int = 60     # time window in seconds
-    RATE_LIMIT_PER_ENDPOINT: bool = True  # separate limits per endpoint
-    
-    # Development settings
-    DEBUG: bool = False
+
+    #  Hugging face settings
+    HF_HUB_OFFLINE: int = 1 #To prevent HTTP calls to the Hub when loading a model.
 
     class Config:
         """Pydantic configuration."""

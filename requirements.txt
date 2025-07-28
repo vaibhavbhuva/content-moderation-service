@@ -1,16 +1,4 @@
 fastapi
 uvicorn
-pydantic
-pydantic-settings
-python-multipart
-python-dotenv
-
-# AI/ML dependencies for profanity detection
-transformers>=4.21.0
-torch>=1.13.0
-google-genai
-pandas
-numpy
-
-# Language detection dependencies
-sentencepiece
+transformers>=4.53.3
+torch==2.2.2

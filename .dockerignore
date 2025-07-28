@@ -85,3 +85,4 @@ dmypy.json
 
 # Scripts
 scripts/
+performance_tests/
