@@ -1,0 +1,15 @@
+[project]
+name = "content-moderation-service"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+   "fastapi>=0.116.1",
+   "kafka-python>=2.2.15",
+   "numpy<2",
+   "pydantic-settings>=2.10.1",
+   "torch==2.2.2",
+   "transformers>=4.53.3",
+   "uvicorn>=0.35.0",
+]

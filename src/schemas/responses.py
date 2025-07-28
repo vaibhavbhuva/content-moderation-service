@@ -2,7 +2,7 @@
 Response schemas for the content moderation service.
 """
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, List, Optional
 from pydantic import Field
 from .base import BaseModel
 
@@ -14,9 +14,6 @@ class ProfanityCheckData(BaseModel):
     confidence: float = Field(..., description="Confidence score (0-100)")
     category: str = Field(..., description="Classification category")
     detected_language: Optional[str] = Field(None, description="Detected language code")
-    language_detection_sample_size: Optional[int] = Field(None, description="Sample size used for language detection")
-    model_used: Optional[str] = Field(None, description="Model used for detection")
-    reasoning: Optional[str] = Field(None, description="Explanation for the classification")
     
     # Additional fields for chunked responses
     text_length: Optional[int] = Field(None, description="Length of input text")
@@ -27,6 +24,7 @@ class ProfanityCheckData(BaseModel):
     aggregation_strategy: Optional[str] = Field(None, description="Strategy used for aggregating chunk results")
     chunk_statistics: Optional[Dict[str, Any]] = Field(None, description="Statistics about chunk processing")
     chunk_details: Optional[list] = Field(None, description="Detailed results for each chunk")
+
 class ProfanityCheckResponse(BaseModel):
     """Profanity check response model."""
     status: str = Field(..., description="Response status (success/error)")
@@ -40,11 +38,9 @@ class ProfanityCheckResponse(BaseModel):
 
 class LanguageDetectionData(BaseModel):
     """Language detection response data model."""
-    detected_language: Optional[str] = None
-    raw: Optional[str] = None
+    language_code: Optional[str] = None
     language_name: Optional[str] = None
     confidence: Optional[float] = None
-    details: Optional[Dict[str, Any]] = None
 
 
 class LanguageDetectionResponse(BaseModel):
@@ -52,7 +48,6 @@ class LanguageDetectionResponse(BaseModel):
     status: str
     message: str
     detected_language: Optional[str] = None
-    raw: Optional[str] = None
     language_name: Optional[str] = None
     confidence: Optional[float] = None
-    details: Optional[Dict[str, Any]] = None
+    top_predictions: Optional[List[LanguageDetectionData]] = None

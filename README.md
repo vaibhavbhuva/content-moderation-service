@@ -1,332 +1,260 @@
-# Content Moderation Service
+# 🛡️ Content Moderation Service
 
-A comprehensive AI-powered content moderation service built with FastAPI, providing advanced text analysis capabilities with support for multiple languages and intelligent text processing.
+![Python](https://img.shields.io/badge/Python-3.12+-blue.svg) ![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg) ![Kafka](https://img.shields.io/badge/Kafka-Enabled-orange.svg)
 
-## 🚀 Features
+**A comprehensive AI-powered content moderation service built with FastAPI, providing advanced text analysis capabilities with support for multiple languages and intelligent processing.**
 
-### Text Profanity Detection
-- **LLM-Based Detection**: Advanced contextual analysis using Gemini 2.5 Flash
-- **Transformer-Based Detection**: Specialized models for English (toxic-bert) and Indic languages (MuRIL)
-- **Multi-Language Support**: 100+ languages with XLM-RoBERTa language detection
-- **Code-Mixed Text**: Advanced handling of mixed-language content (e.g., Hinglish)
-- **Automatic Text Chunking**: Intelligent chunking for long texts with sliding window overlap
-- **Result Aggregation**: Majority voting and priority-based aggregation strategies
+**Quick Navigation:** [🚀 Quick Start](#-quick-start) • [📖 Documentation](#-api-documentation) • [🔧 Configuration](#-configuration) • [🐳 Docker](#-docker-deployment)
 
-### Language Detection
-- **High Accuracy**: 97.9% accuracy using XLM-RoBERTa
-- **Real-time Processing**: Fast language identification for content routing
-- **Code-Mixed Support**: Detection of mixed-language patterns
-- **Script Analysis**: Character-based script distribution analysis
+---
 
-### Text Processing
-- **Automatic Text Chunking**: Internal chunking for long texts with sliding window overlap
-- **Token Management**: Configurable chunk sizes and overlap for optimal processing
-- **Performance Optimization**: GPU acceleration support for transformer models
-- **Rate Limiting**: Configurable rate limiting with per-endpoint controls
+## 📋 Table of Contents
+
+- [✨ Features](#-features)
+- [🏗️ Architecture](#-architecture)
+- [📋 Prerequisites](#-prerequisites)
+- [🚀 Quick Start](#-quick-start)
+- [⚙️ Configuration](#-configuration)
+- [📖 API Documentation](#-api-documentation)
+- [🧪 AI Models](#-ai-models)
+- [📊 API Examples](#-api-examples)
+- [📡 Kafka Integration](#-kafka-integration)
+- [🔍 Monitoring](#-monitoring)
+- [🐳 Docker Deployment](#-docker-deployment)
+- [🤝 Contributing](#-contributing)
+
+---
+
+## ✨ Features
+
+### 🎯 Text Profanity Detection
+- **Transformer-Based Models**: English (toxic-bert) & Indic (MuRIL)
+- **100+ Languages**: XLM-RoBERTa language detection
+- **Code-Mixed Support**: Hinglish, Spanglish, etc.
+- **Smart Chunking**: Sliding window for long texts
+- **Result Aggregation**: Priority-based & majority voting
+
+### 🔍 Language Detection
+- **97.9% Accuracy**: XLM-RoBERTa powered
+- **Real-time Processing**: Fast language identification
+- **Mixed Languages**: Code-switched text support
+- **Script Analysis**: Character distribution analysis
+
+### ⚙️ Advanced Processing
+- **Automatic Chunking**: Intelligent text segmentation
+- **Token Management**: Configurable sizes & overlap
+- **GPU Acceleration**: Transformer model optimization
+- **Rate Limiting**: Per-endpoint controls
+
+### 📡 Event Streaming
+- **Kafka Integration**: Real-time event emission
+- **Custom Topics**: Configurable event routing
+- **Retry Logic**: Reliable message delivery
+- **Monitoring**: Built-in observability
+
+---
 
 ## 🏗️ Architecture
 
-The application follows a clean architecture pattern with clear separation of concerns:
+### 📁 Project Structure
 
 ```
 src/
-├── api/v1/                 # API Controllers (Presentation Layer)
-│   ├── profanity_controller.py    # Profanity detection endpoints
-│   └── text_moderation.py         # Legacy text moderation endpoints
-├── services/               # Business Logic (Service Layer)
-│   ├── profanity_service.py       # Core profanity detection logic
-│   ├── language_detection_service.py # Clean language detection
-│   ├── text_chunking_service.py   # Text chunking algorithms (internal)
-│   
-├── data/                   # Data Layer
-│   └── constants.py              # Language mappings and constants
-├── schemas/                # Data Models
-│   ├── base.py                   # Base Pydantic models
-│   ├── requests.py               # Request schemas
-│   ├── responses.py              # Response schemas
-│   └── moderation.py             # Moderation-specific schemas
-├── core/                   # Core Configuration
-│   ├── config.py                 # Application settings
-│   ├── logger.py                 # Logging configuration
-│   ├── middleware.py             # CORS and other middleware
-│   └── rate_limiter.py           # Rate limiting implementation
-├── utils/                  # Utility Functions
-│   └── helpers.py               # Common helper functions
-└── main.py                 # Application Entry Point
+├── api/
+│   └── v1/                           # API Controllers
+│       ├── __init__.py
+│       ├── language_controller.py    # Language detection endpoints
+│       └── profanity_controller.py   # Profanity detection endpoints
+├── services/                         # Business Logic
+│   ├── kafka/                        # Kafka Integration
+│   │   ├── __init__.py
+│   │   └── kafka_service.py          # Kafka producer and messaging
+│   ├── __init__.py
+│   ├── language_detection_service.py # Language identification
+│   ├── text_chunking_service.py      # Text segmentation
+│   └── text_profanity_service.py     # Core profanity detection
+├── data/                             # Data Layer
+│   └── constants.py                  # Language mappings
+├── schemas/                          # Data Models
+│   ├── base.py                       # Base Pydantic models
+│   ├── requests.py                   # Request schemas
+│   ├── responses.py                  # Response schemas
+│   └── moderation.py                 # Moderation schemas
+├── core/                            # Configuration
+│   ├── config.py                     # App settings
+│   ├── logger.py                     # Logging setup
+│   └── middleware.py                 # CORS & middleware
+├── utils/                           # Utilities
+│   └── helpers.py                    # Helper functions
+└── main.py                          # Application entry
 ```
+
+---
 
 ## 📋 Prerequisites
 
-- Python 3.8+
-- Gemini API key (for LLM-based profanity detection)
-- GPU support recommended for transformer models (optional)
+- **[Python 3.12+](https://www.python.org/)**
+- **[UV Package Manager](https://github.com/astral-sh/uv)**
+- **[Apache Kafka](https://kafka.apache.org/)** (optional - only needed if `KAFKA_ENABLED=true`)
 
-## 🛠️ Installation
-
-1. **Clone the repository:**
+### Install UV
 ```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1️⃣ Clone & Setup
+```bash
+# Clone repository
 git clone https://github.com/KB-iGOT/content-moderation-service.git
 cd content-moderation-service
+
+# Install dependencies
+uv sync
+
+# Activate environment
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scripts\activate   # Windows
 ```
 
-2. **Create a virtual environment:**
+### 2️⃣ Configure Environment
+Create `.env` file:
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # On Linux/macOS
-# venv\Scripts\activate  # On Windows
+cp .env.example .env
+# Edit configuration as needed
 ```
 
-3. **Install dependencies:**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Set up environment variables:**
-Create a `.env` file in the project root:
-```env
-# Gemini API Configuration
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Optional Configuration
-DEBUG=false
-LOG_LEVEL=INFO
-MAX_TEXT_LENGTH=500
-CHUNKING_ENABLED=true
-CHUNK_SIZE=500
-CHUNK_OVERLAP=12
-MAX_CHUNKS_PER_TEXT=10
-
-# Rate Limiting
-RATE_LIMIT_ENABLED=true
-RATE_LIMIT_REQUESTS=100
-RATE_LIMIT_WINDOW=60
-```
-
-5. **Run the application:**
+### 3️⃣ Start Service
 ```bash
 uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-## 📚 API Documentation
-
-Once the application is running, visit:
-- **Interactive API Docs**: http://localhost:8000/docs
-- **ReDoc Documentation**: http://localhost:8000/redoc
-- **OpenAPI JSON**: http://localhost:8000/api/v1/openapi.json
-
-## 🔗 API Endpoints
-
-### Core Profanity Detection
-
-#### LLM-Based Detection
-```http
-POST /api/v1/profanity/check-llm
-Content-Type: application/json
-
-{
-  "text": "Your text to analyze"
-}
+### 4️⃣ Test API
+```bash
+curl -X POST "http://localhost:8000/api/v1/moderation/text" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Hello world!", "language": "en"}'
 ```
 
-#### Transformer-Based Detection (with Automatic Chunking)
-```http
-POST /api/v1/profanity/check-transformer
-Content-Type: application/json
+Service running at: http://localhost:8000
 
-{
-  "text": "Your text to analyze"
-}
-```
+---
 
-### Language Detection
-```http
-POST /api/v1/profanity/detect-language
-Content-Type: application/json
+## ⚙️ Configuration
 
-{
-  "text": "Text to detect language for",
-  "min_chars": 5
-}
-```
+### 📊 Environment Variables
 
-## 🎯 Usage Examples
+| Group | Variable | Type | Default | Description |
+|-------|----------|------|---------|-------------|
+| **API** | `PROJECT_NAME` | `string` | `"Content Moderation API"` | Application display name |
+| | `PROJECT_VERSION` | `string` | `"1.0.0"` | API version identifier |
+| | `API_V1_STR` | `string` | `"/api/v1"` | API version prefix |
+| | `LOG_LEVEL` | `string` | `"INFO"` | Logging level (DEBUG, INFO, WARNING, ERROR) |
+| **AI Models** | `ENGLISH_TRANSFORMER_MODEL` | `string` | `"unitary/toxic-bert"` | English profanity detection model |
+| | `INDIC_TRANSFORMER_MODEL` | `string` | `"Hate-speech-CNERG/indic-abusive-allInOne-MuRIL"` | Indic languages model |
+| | `LANGUAGE_DETECT_MODEL` | `string` | `"ZheYu03/xlm-r-langdetect-model"` | Language detection model |
+| | `HF_HUB_OFFLINE` | `integer` | `1` | Prevent Hugging Face Hub calls |
+| **Text Processing** | `MAX_TEXT_LENGTH` | `integer` | `500` | Max length before chunking |
+| | `CHUNKING_ENABLED` | `boolean` | `true` | Enable automatic chunking |
+| | `CHUNK_SIZE` | `integer` | `500` | Tokens per chunk |
+| | `CHUNK_OVERLAP` | `integer` | `100` | Overlap between chunks |
+| | `MAX_CHUNKS_PER_TEXT` | `integer` | `10` | Maximum chunks per text |
+| **Kafka** | `KAFKA_ENABLED` | `boolean` | `true` | Enable Kafka streaming |
+| | `KAFKA_BOOTSTRAP_SERVERS` | `string` | `"localhost:9092"` | Kafka broker connection |
+| | `KAFKA_MODERATION_RESULTS_TOPIC` | `string` | `"dev.content.profanity"` | Results topic name |
+| | `KAFKA_RETRIES` | `integer` | `3` | Retry attempts |
+| | `KAFKA_RETRY_BACKOFF_MS` | `integer` | `100` | Retry delay (ms) |
 
-### Python Client Examples
-
-#### Basic Profanity Detection
-```python
-import requests
-
-# LLM-based profanity detection with reasoning
-response = requests.post(
-    "http://localhost:8000/api/v1/profanity/check-llm",
-    json={"text": "This is a sample text"}
-)
-result = response.json()
-print(f"Is profane: {result['responseData']['isProfane']}")
-print(f"Confidence: {result['responseData']['confidence']}%")
-print(f"Reasoning: {result['responseData']['reasoning']}")
-
-# Transformer-based detection with auto-chunking
-response = requests.post(
-    "http://localhost:8000/api/v1/profanity/check-transformer",
-    json={"text": "This is a very long text that will be automatically chunked..."}
-)
-result = response.json()
-print(f"Is profane: {result['responseData']['isProfane']}")
-print(f"Chunking used: {result['responseData']['chunking_used']}")
-print(f"Total chunks: {result['responseData']['total_chunks']}")
-```
-
-#### Language Detection
-```python
-# Language detection
-response = requests.post(
-    "http://localhost:8000/api/v1/profanity/detect-language", 
-    json={"text": "Hello, how are you?"}
-)
-result = response.json()
-print(f"Detected language: {result['language_name']}")
-print(f"Confidence: {result['confidence']:.2%}")
-print(f"Language group: {result['details']['language_group']}")
-```
-
-## 🧪 Model Information
-
-### Language Detection
-- **Model**: XLM-RoBERTa (ZheYu03/xlm-r-langdetect-model)
-- **Accuracy**: 97.9%
-- **Languages**: 100+ supported languages
-- **Special Features**: Code-mixed language detection (e.g., Hinglish)
-- **Use Case**: Language identification and routing to appropriate models
-
-### English Profanity Detection
-- **Model**: toxic-bert (unitary/toxic-bert)
-- **Purpose**: English text toxicity detection
-- **Categories**: Toxic, severe toxic, obscene, threat, insult, identity hate
-- **Threshold**: 0.4 (configurable)
-
-### Indic Profanity Detection  
-- **Model**: MuRIL (Hate-speech-CNERG/indic-abusive-allInOne-MuRIL)
-- **Languages**: Hindi, Tamil, Telugu, Bengali, Gujarati, Punjabi, and more
-- **Labels**: Normal (0), Abusive (1)
-- **Script Support**: Devanagari, Tamil, Telugu, Bengali, and other Indic scripts
-
-### LLM-Based Detection
-- **Model**: Gemini 2.5 Flash
-- **Features**: 
-  - Contextual analysis with reasoning
-  - Multilingual support
-  - JSON structured responses
-  - Temperature 0 for consistent results
-- **Output**: Confidence score, boolean result, and reasoning explanation
-
-### Automatic Text Chunking (Internal)
-- **Strategy**: Sliding window with overlap (automatically applied to long texts)
-- **Token Management**: Configurable chunk size (default: 500 tokens)
-- **Overlap**: Configurable overlap (default: 12 tokens) for context preservation
-- **Aggregation**: Priority-based and majority voting strategies for chunk results
-
-## 🔧 Configuration
-
-Key configuration options in `src/core/config.py`:
-
-```python
-class Settings(BaseSettings):
-    # Basic API settings
-    PROJECT_NAME: str = "Content Moderation API"
-    API_V1_STR: str = "/api/v1"
-    LOG_LEVEL: str = "INFO"
-    
-    # Gemini API settings
-    GEMINI_API_KEY: Optional[str] = None
-    
-    # Model settings
-    MAX_TEXT_LENGTH: int = 500           # Maximum text length before chunking
-    MIN_TEXT_LENGTH: int = 5             # Minimum text length for processing
-    LANGUAGE_DETECTION_SAMPLE_SIZE: int = 300  # Characters for language detection
-    
-    # Text chunking settings
-    CHUNKING_ENABLED: bool = True        # Enable automatic chunking
-    CHUNK_SIZE: int = 500               # Tokens per chunk
-    CHUNK_OVERLAP: int = 12             # Overlap between chunks (tokens)
-    MAX_CHUNKS_PER_TEXT: int = 10       # Maximum chunks per text
-    
-    # Rate limiting settings
-    RATE_LIMIT_ENABLED: bool = True     # Enable rate limiting
-    RATE_LIMIT_REQUESTS: int = 100      # Requests per time window
-    RATE_LIMIT_WINDOW: int = 60         # Time window in seconds
-    RATE_LIMIT_PER_ENDPOINT: bool = True # Separate limits per endpoint
-    
-    # Development settings
-    DEBUG: bool = False
-```
-
-### Environment Variables
-
-All settings can be overridden using environment variables in your `.env` file:
+### 📄 Example Configuration
 
 ```env
-# API Configuration
+# API Settings
 PROJECT_NAME="My Content Moderation API"
-LOG_LEVEL=DEBUG
-
-# Gemini Configuration
-GEMINI_API_KEY=your_api_key_here
-
-# Processing Limits
+LOG_LEVEL=INFO
 MAX_TEXT_LENGTH=1000
-LANGUAGE_DETECTION_SAMPLE_SIZE=500
 
-# Chunking Configuration
+# Chunking Settings
 CHUNKING_ENABLED=true
 CHUNK_SIZE=512
 CHUNK_OVERLAP=50
 MAX_CHUNKS_PER_TEXT=20
 
-# Rate Limiting
-RATE_LIMIT_ENABLED=true
-RATE_LIMIT_REQUESTS=50
-RATE_LIMIT_WINDOW=60
+# Kafka Settings (Optional)
+KAFKA_ENABLED=true
+KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+KAFKA_MODERATION_RESULTS_TOPIC=content.moderation.results
+
+# Hugging Face
+HF_HUB_OFFLINE=1
 ```
 
-## 📊 Response Formats
+---
 
-### Profanity Detection Response
+## 📖 API Documentation
+
+### 📚 Documentation Links
+
+| Documentation | URL | Description |
+|------------------|--------|----------------|
+| **Interactive Docs** | `/docs` | Swagger UI with live testing |
+| **ReDoc** | `/redoc` | Clean documentation format |
+| **OpenAPI Schema** | `/api/v1/openapi.json` | Raw OpenAPI specification |
+
+### 🎯 Core Endpoints & Examples
+
+#### 🛡️ Profanity Detection
+```http
+POST /api/v1/moderation/text
+```
+**Purpose:** Analyze text for profanity content
+
+**Request:**
+```json
+{
+  "text": "Hello world, this is a test!",
+  "language": "en",
+  "metadata": {
+    "user_id": "user123",
+    "content_id": "post456",
+    "source": "web_app"
+  }
+}
+```
+
+**Response:**
 ```json
 {
   "status": "success",
   "message": "Profanity check completed",
   "responseData": {
-    "text": "Input text",
+    "text": "Hello world, this is a test!",
     "isProfane": false,
-    "confidence": 95.23,
-    "category": "clean",
-    "detected_language": "english",
-    "model_used": "English (toxic-bert)",
-    "chunking_used": false,
-    "total_chunks": 1
+    "confidence": 99.88,
+    "category": "Non-Profane",
+    "detected_language": "en"
   }
 }
 ```
 
-### Chunked Profanity Detection Response
+**Chunked Analysis (Long Text):**
 ```json
 {
   "status": "success",
   "message": "Profanity check completed using chunking (3 chunks)",
   "responseData": {
-    "text": "Long input text...",
-    "text_length": 1500,
+    "text": "Very long text that exceeds the maximum length...",
     "isProfane": true,
     "confidence": 87.5,
+    "detected_language": "en",
     "category": "profane",
     "chunking_used": true,
     "total_chunks": 3,
     "profane_chunks": 1,
     "clean_chunks": 2,
     "aggregation_strategy": "priority_based",
-    "model_used": "transformer+chunking",
     "chunk_statistics": {
       "total_processed": 3,
       "profane_detected": 1,
@@ -338,129 +266,155 @@ RATE_LIMIT_WINDOW=60
 }
 ```
 
-### Language Detection Response
+#### 🔍 Language Detection
+```http
+POST /api/v1/language/detect
+```
+**Purpose:** Identify text language
+
+**Request:**
+```json
+{
+  "text": "Hello, how are you today?"
+}
+```
+
+**Response:**
 ```json
 {
   "status": "success",
-  "detected_language": "english",
-  "raw": "en",
-  "language_name": "English", 
-  "confidence": 0.9876,
-  "details": {
-    "model_used": "XLM-RoBERTa",
-    "language_group": "english",
-    "text_length": 25,
-    "sample_used": 25,
-    "code_mixed": false
+  "message": "Language detected successfully",
+  "detected_language": "en",
+  "language_name": "English",
+  "confidence": 0.9999,
+  "top_predictions": [
+    {
+      "language_code": "en",
+      "language_name": "English",
+      "confidence": 0.9999
+    },
+    {
+      "language_code": "de",
+      "language_name": "German",
+      "confidence": 0.0001
+    }
+  ]
+}
+```
+
+---
+
+## 📡 Kafka Integration
+
+### 📨 Event Structure
+
+When `KAFKA_ENABLED=true`, the service emits events after each profanity check:
+
+```json
+{
+  "request_data": {
+    "text": "Input text for analysis",
+    "language": "en",
+    "metadata": {
+      "user_id": "user123",
+      "content_id": "post456",
+      "source": "web_app"
+    }
+  },
+  "response_data": {
+    "status": "success",
+    "message": "Profanity check completed",
+    "responseData": {
+      "isProfane": false,
+      "confidence": 99.86,
+      "category": "Non-Profane",
+      "detected_language": "en",
+      "model_used": "toxic-bert",
+      "chunking_used": false
+    }
   }
 }
 ```
 
-## 🚨 Error Handling
+### 🎯 Topic Configuration
 
-The API provides consistent error responses across all endpoints:
+| Topic | Purpose | Retention | Partitions |
+|-------|---------|-----------|------------|
+| `dev.content.profanity` | Profanity results | 7 days | 3 |
 
+---
+
+## 🔍 Monitoring
+
+### ❤️ Health Monitoring
+
+#### Health Check Endpoint
+```http
+GET /health
+```
+
+**Response:**
 ```json
 {
-  "status": "error",
-  "message": "Descriptive error message",
-  "error_code": "ERROR_CODE",
-  "details": {
-    "additional": "context"
-  }
+  "status": "OK",
+  "version": "1.0.0"
 }
 ```
 
-### Common Error Scenarios
+---
 
-#### Text Too Short
-```json
-{
-  "status": "error",
-  "message": "Input text is too short (minimum 5 characters required)",
-  "responseData": null
-}
-```
+## 🐳 Docker Deployment
 
-#### Missing API Key
-```json
-{
-  "status": "error", 
-  "message": "Gemini API key not configured",
-  "responseData": null
-}
-```
+### 🚀 Quick Deploy
 
-#### Chunking Failure
-```json
-{
-  "status": "error",
-  "message": "Failed to process any chunks",
-  "responseData": null
-}
-```
-
-## 🔍 Monitoring & Logging
-
-The application includes comprehensive logging and monitoring:
-
-- **Request/Response Logging**: All API calls with performance metrics
-- **Chunk Processing**: Detailed logging of chunking operations
-- **Model Performance**: Individual model prediction logging
-- **Error Tracking**: Detailed error logging with context
-- **Health Checks**: Basic health endpoint at `/health`
-
-### Log Levels
-- **INFO**: General operation logs, API requests, processing results
-- **DEBUG**: Detailed chunk processing, model predictions, text previews
-- **WARNING**: Fallback scenarios, deprecated endpoint usage
-- **ERROR**: Failed operations, API errors, model failures
-
-## 🐳 Docker Support
-
-### Build and Run with Docker
-
+#### Build Image
 ```bash
-# Build the Docker image
 docker build -t content-moderation-service .
+```
 
-# Run the container
+#### Run Container
+```bash
 docker run -p 8000:8000 \
-  -e GEMINI_API_KEY=your_api_key_here \
+  -e KAFKA_ENABLED=false \
   -e LOG_LEVEL=INFO \
   content-moderation-service
 ```
 
-### Docker Compose (Development)
-
-```yaml
-version: '3.8'
-services:
-  content-moderation:
-    build: .
-    ports:
-      - "8000:8000"
-    environment:
-      - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - LOG_LEVEL=DEBUG
-      - DEBUG=true
-    volumes:
-      - .:/app
-    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+#### With Environment File
+```bash
+docker run -p 8000:8000 \
+  --env-file .env \
+  content-moderation-service
 ```
 
+#### Check Status
+```bash
+curl http://localhost:8000/health
+```
 
+---
 
-### Development Setup
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Install development dependencies: `pip install -r requirements-dev.txt`
-4. Make your changes
-5. Run tests: `python -m pytest`
-6. Run linting: `flake8 src/`
-7. Commit your changes (`git commit -m 'Add amazing feature'`)
-8. Push to the branch (`git push origin feature/amazing-feature`)
-9. Open a Pull Request
+## 🤝 Contributing
 
+### 🌟 We Welcome Contributions!
 
+| Issues | Features | Documentation | Testing |
+|-----------|-------------|------------------|------------|
+| Bug reports | New features | Improve docs | Add tests |
+| Performance issues | Model improvements | API examples | Coverage increase |
 
+### 📋 Contribution Process
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Make** your changes
+4. **Add** tests for new functionality
+5. **Update** documentation
+6. **Ensure** all tests pass (`pytest`)
+7. **Submit** a pull request
+
+---
+
+**Star this repository if you find it helpful!**
+
+[⬆️ Back to Top](#-content-moderation-service)
