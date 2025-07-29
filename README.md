@@ -214,7 +214,7 @@ POST /api/v1/moderation/text
 **Request:**
 ```json
 {
-  "text": "Hello world, this is a test!",
+  "text": "It was a pleasure to grade this!",
   "language": "en",
   "metadata": {
     "user_id": "user123",
@@ -224,17 +224,34 @@ POST /api/v1/moderation/text
 }
 ```
 
+### 📝 **Request Body Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `text` | `string` | ✅ **Yes** | The actual text content to analyze for profanity |
+| `language` | `string` | ✅ **Yes** | Language code (e.g., "en", "hi", "es") |
+| `metadata` | `object` | ❌ Optional | Additional context information for tracking/logging |
+
+
 **Response:**
 ```json
 {
   "status": "success",
   "message": "Profanity check completed",
   "responseData": {
-    "text": "Hello world, this is a test!",
+    "text": "It was a pleasure to grade this!",
     "isProfane": false,
-    "confidence": 99.88,
+    "confidence": 99.92,
     "category": "Non-Profane",
-    "detected_language": "en"
+    "detected_language": "en",
+    "text_length": null,
+    "chunking_used": null,
+    "total_chunks": null,
+    "profane_chunks": null,
+    "clean_chunks": null,
+    "aggregation_strategy": null,
+    "chunk_statistics": null,
+    "chunk_details": null
   }
 }
 ```
@@ -243,25 +260,65 @@ POST /api/v1/moderation/text
 ```json
 {
   "status": "success",
-  "message": "Profanity check completed using chunking (3 chunks)",
+  "message": "Profanity check completed using chunking (2 chunks)",
   "responseData": {
-    "text": "Very long text that exceeds the maximum length...",
-    "isProfane": true,
-    "confidence": 87.5,
+    "text": "Artificial Intelligence (AI) is no longer a futuristic concept—it’s part of our daily routines. From personalized recommendations on streaming platforms to advanced healthcare diagnostics, AI is resha...",
+    "isProfane": false,
+    "confidence": 99.94,
+    "category": "clean",
     "detected_language": "en",
-    "category": "profane",
+    "text_length": 2851,
     "chunking_used": true,
-    "total_chunks": 3,
-    "profane_chunks": 1,
+    "total_chunks": 2,
+    "profane_chunks": 0,
     "clean_chunks": 2,
-    "aggregation_strategy": "priority_based",
+    "aggregation_strategy": "priority_clean",
     "chunk_statistics": {
-      "total_processed": 3,
-      "profane_detected": 1,
+      "total_processed": 2,
+      "total_attempted": 2,
+      "profane_detected": 0,
       "clean_detected": 2,
-      "average_confidence": 75.2,
-      "aggregation_rationale": "Profanity detected in any chunk takes priority"
-    }
+      "average_confidence": 99.94,
+      "best_chunk": {
+        "category": "clean",
+        "confidence": 0.9995,
+        "confidence_percentage": 99.95,
+        "chunk_index": 1,
+        "chunk_text": "efficient. in this article, we explore how ai is enhancing user experiences and creating opportuniti...",
+        "reasoning": "",
+        "model_used": "transformer",
+        "detected_language": "en",
+        "chunk_tokens": 104,
+        "chunk_chars": 599
+      },
+      "aggregation_rationale": "Priority-based: All chunks clean, using average confidence"
+    },
+    "chunk_details": [
+      {
+        "category": "clean",
+        "confidence": 0.9993000000000001,
+        "confidence_percentage": 99.93,
+        "chunk_index": 0,
+        "chunk_text": "artificial intelligence ( ai ) is no longer a futuristic concept — it ’ s part of our daily routines...",
+        "reasoning": "",
+        "model_used": "transformer",
+        "detected_language": "en",
+        "chunk_tokens": 500,
+        "chunk_chars": 2855
+      },
+      {
+        "category": "clean",
+        "confidence": 0.9995,
+        "confidence_percentage": 99.95,
+        "chunk_index": 1,
+        "chunk_text": "efficient. in this article, we explore how ai is enhancing user experiences and creating opportuniti...",
+        "reasoning": "",
+        "model_used": "transformer",
+        "detected_language": "en",
+        "chunk_tokens": 104,
+        "chunk_chars": 599
+      }
+    ]
   }
 }
 ```
@@ -278,6 +335,13 @@ POST /api/v1/language/detect
   "text": "Hello, how are you today?"
 }
 ```
+
+### 📝 **Request Structure**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `text` | `string` | ✅ **Yes** | The text you want to identify the language for |
+
 
 **Response:**
 ```json
@@ -313,7 +377,7 @@ When `KAFKA_ENABLED=true`, the service emits events after each profanity check:
 ```json
 {
   "request_data": {
-    "text": "Input text for analysis",
+    "text": "It was a pleasure to grade this!",
     "language": "en",
     "metadata": {
       "user_id": "user123",
@@ -325,12 +389,19 @@ When `KAFKA_ENABLED=true`, the service emits events after each profanity check:
     "status": "success",
     "message": "Profanity check completed",
     "responseData": {
+      "text": "It was a pleasure to grade this!",
       "isProfane": false,
-      "confidence": 99.86,
+      "confidence": 99.92,
       "category": "Non-Profane",
       "detected_language": "en",
-      "model_used": "toxic-bert",
-      "chunking_used": false
+      "text_length": null,
+      "chunking_used": null,
+      "total_chunks": null,
+      "profane_chunks": null,
+      "clean_chunks": null,
+      "aggregation_strategy": null,
+      "chunk_statistics": null,
+      "chunk_details": null
     }
   }
 }
