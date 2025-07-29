@@ -26,4 +26,5 @@ EXPOSE 8000
 HEALTHCHECK CMD curl -f http://localhost:8000/health || exit 1
 
 # Run application
-CMD ["sh", "-c", "uvicorn src.main:app --host 0.0.0.0 --port $PORT"]
+# CMD ["sh", "-c", "uvicorn src.main:app --host 0.0.0.0 --port $PORT"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
