@@ -68,8 +68,9 @@ src/
 ├── services/                         # Business Logic
 │   ├── kafka/                        # Kafka Integration
 │   │   ├── __init__.py
-│   │   └── kafka_service.py          # Kafka producer and messaging
+│   │   └── producer.py               # Kafka producer and messaging
 │   ├── __init__.py
+│   ├── kafka_service.py              # Kafka Integration service
 │   ├── language_detection_service.py # Language identification
 │   ├── text_chunking_service.py      # Text segmentation
 │   └── text_profanity_service.py     # Core profanity detection
