@@ -31,7 +31,7 @@ def _load_english_model():
         
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     tokenizer = AutoTokenizer.from_pretrained(settings.ENGLISH_TRANSFORMER_MODEL)
-    model = AutoModelForSequenceClassification.from_pretrained("unitary/toxic-bert").to(device)
+    model = AutoModelForSequenceClassification.from_pretrained(settings.ENGLISH_TRANSFORMER_MODEL).to(device)
     id2label = model.config.id2label if hasattr(model.config, 'id2label') else {0: 'NOT_TOXIC', 1: 'TOXIC'}
     _transformer_models['english'] = (tokenizer, model, id2label, device)
     return _transformer_models['english']
@@ -43,7 +43,7 @@ def _load_indic_model():
         return _transformer_models['indic']
         
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_name = "Hate-speech-CNERG/indic-abusive-allInOne-MuRIL"
+    model_name = settings.INDIC_TRANSFORMER_MODEL
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForSequenceClassification.from_pretrained(model_name).to(device)
     
