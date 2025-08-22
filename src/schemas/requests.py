@@ -16,7 +16,7 @@ class ProfanityCheckRequest(BaseModel):
     language: str = Field(
         None,
         min_length=2,
-        max_length=3,
+        max_length=10,
         description="language hint for transformer models, using ISO 639-1 (e.g., 'hi', 'en')."
     )
     metadata: Optional[Dict[str, Any]] = {}
