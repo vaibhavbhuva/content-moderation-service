@@ -14,6 +14,10 @@ RUN uv sync --frozen --no-cache
 
 # Copy source code
 COPY src ./src
+COPY scripts ./scripts
+
+# Pre-download Hugging Face models (stored in default cache)
+RUN uv run python scripts/download_models.py
 
 EXPOSE 8000
 

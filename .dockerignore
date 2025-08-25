@@ -84,5 +84,5 @@ dmypy.json
 .cache
 
 # Scripts
-scripts/
+# scripts/
 performance_tests/
