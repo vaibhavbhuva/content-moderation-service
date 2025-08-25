@@ -24,16 +24,18 @@ LANGUAGE_NAMES = {
     'pt': 'Portuguese', 'ru': 'Russian', 'ja': 'Japanese', 'ko': 'Korean', 'zh': 'Chinese',
     'ar': 'Arabic', 'hi': 'Hindi', 'bn': 'Bengali', 'ta': 'Tamil', 'te': 'Telugu',
     'mr': 'Marathi', 'gu': 'Gujarati', 'kn': 'Kannada', 'ml': 'Malayalam', 'pa': 'Punjabi',
-    'ur': 'Urdu', 'tr': 'Turkish', 'pl': 'Polish', 'nl': 'Dutch', 'sv': 'Swedish',
+    'ur': '', 'tr': 'Turkish', 'pl': 'Polish', 'nl': 'Dutch', 'sv': 'Swedish',
     'da': 'Danish', 'no': 'Norwegian', 'fi': 'Finnish', 'cs': 'Czech', 'hu': 'Hungarian',
     'ro': 'Romanian', 'bg': 'Bulgarian', 'hr': 'Croatian', 'sk': 'Slovak', 'sl': 'Slovenian',
     'et': 'Estonian', 'lv': 'Latvian', 'lt': 'Lithuanian', 'el': 'Greek', 'he': 'Hebrew',
     'th': 'Thai', 'vi': 'Vietnamese', 'id': 'Indonesian', 'ms': 'Malay', 'tl': 'Filipino',
-    'sw': 'Swahili', 'af': 'Afrikaans', 'zu': 'Zulu', 'yo': 'Yoruba', 'ha': 'Hausa'
+    'sw': 'Swahili', 'af': 'Afrikaans', 'zu': 'Zulu', 'yo': 'Yoruba', 'ha': 'Hausa',
+    'bn_rom': "Bengali", "hi_rom": "Hindi", "ta_rom": "Tamil", "te_rom": "Telugu",
+    "ur_rom": "Urdu"
 }
 
 # Language groups for our profanity detection logic
-INDIC_LANGUAGES = {'hi', 'bn', 'ta', 'te', 'mr', 'gu', 'kn', 'ml', 'pa', 'ur'}
+INDIC_LANGUAGES = {'hi', 'bn', 'ta', 'te', 'mr', 'gu', 'kn', 'ml', 'pa', 'ur', 'hi_rom', 'bn_rom', 'ta_rom', 'te_rom'}
 ENGLISH_LANGUAGES = {'en'}
 
 

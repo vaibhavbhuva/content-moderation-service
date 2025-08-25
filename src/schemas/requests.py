@@ -13,7 +13,7 @@ from src.core.config import settings
 
 class ProfanityCheckRequest(BaseModel):
     """Request model for profanity check endpoints."""
-    text: str = Field(..., min_length=settings.CONTENT_TEXT_MIN_LENGTH, max_length=settings.CONTENT_TEXT_MIN_LENGTH, description="Text to check for profanity")
+    text: str = Field(..., min_length=settings.CONTENT_TEXT_MIN_LENGTH, max_length=settings.CONTENT_TEXT_MAX_LENGTH, description="Text to check for profanity")
     language: str = Field(
         ...,
         min_length=2,

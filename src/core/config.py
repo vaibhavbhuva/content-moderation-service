@@ -42,8 +42,8 @@ class Settings(BaseSettings):
     MAX_TEXT_LENGTH: int = 500
 
     # General text length constraints (applies to multiple APIs)
-    CONTENT_TEXT_MIN_LENGTH=2
-    CONTENT_TEXT_MAX_LENGTH=3000
+    CONTENT_TEXT_MIN_LENGTH: int = 2
+    CONTENT_TEXT_MAX_LENGTH: int = 3000
 
     # Language Detection settings
     LANGUAGE_DETECTION_SAMPLE_SIZE: int = 300  # characters to use for language detection

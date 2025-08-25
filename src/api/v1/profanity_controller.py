@@ -47,7 +47,12 @@ async def analyze_text_profanity(
     # print(request.dict())
     try:
         response = check_profanity_transformer_chunked(request.text, request.language)
-        if response["status"] == "error":
+        if response["status"] == "failed":
+            background_tasks.add_task(
+                kafka_service.send_moderation_result,
+                request.model_dump_json(),
+                response
+            )
             raise HTTPException(status_code=400, detail=response["message"])
         logger.info("Profanity check completed successfully")
         background_tasks.add_task(
@@ -61,4 +66,9 @@ async def analyze_text_profanity(
         raise
     except Exception as e:
         logger.exception("Error processing moderation request:")
+        background_tasks.add_task(
+            kafka_service.send_moderation_result,
+            request.model_dump_json(),
+            {"status": "failed", "message": "Internal server error"}
+        )
         raise HTTPException(status_code=500, detail="Internal server error")

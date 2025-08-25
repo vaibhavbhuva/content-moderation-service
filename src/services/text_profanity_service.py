@@ -57,6 +57,7 @@ def _load_indic_model():
 
 def _process_english_model(text: str, detected_lang: str) -> Dict[str, Any]:
     """Process text using English toxic-bert model"""
+    logger.info("Process text using English toxic-bert model")
     tokenizer, model, id2label, device = _load_english_model()
     inputs = tokenizer(str(text), return_tensors="pt", truncation=True, max_length=512)
     inputs = {k: v.to(device) for k, v in inputs.items()}
@@ -101,6 +102,7 @@ def _process_english_model(text: str, detected_lang: str) -> Dict[str, Any]:
 
 def _process_indic_model(text: str, detected_lang: str) -> Dict[str, Any]:
     """Process text using Indic MuRIL model"""
+    logger.info("Process text using Indic MuRIL model")
     tokenizer, model, _, device = _load_indic_model()
     encoding = tokenizer.encode_plus(
         str(text),
@@ -171,9 +173,9 @@ def check_profanity_transformer(text: str, language: str) -> Dict[str, Any]:
         return profanity_res
             
     except Exception as e:
-        logger.error(f"Transformer profanity detection error: {str(e)}")
+        logger.exception(f"Transformer profanity detection error")
         return {
-            "status": "error",
+            "status": "failed",
             "message": f"Transformer model error: {str(e)}",
             "responseData": None
         }
@@ -200,7 +202,7 @@ def check_profanity_transformer_chunked(text: str, language: str) -> Dict[str, A
             # Chunk the text
             chunking_result = chunk_text_service(text, "sliding_window")
             
-            if chunking_result["status"] == "error":
+            if chunking_result["status"] == "failed":
                 logger.warning(f"Chunking failed: {chunking_result['message']}")
                 logger.info("Falling back to processing truncated text without chunking")
                 # Fall back to processing without chunking (truncated)
@@ -299,7 +301,7 @@ def check_profanity_transformer_chunked(text: str, language: str) -> Dict[str, A
             if not chunk_results:
                 logger.error(f"No chunks were processed successfully out of {len(chunking_result['chunks'])} total chunks")
                 return {
-                    "status": "error",
+                    "status": "failed",
                     "message": "Failed to process any chunks",
                     "responseData": None
                 }
@@ -387,9 +389,9 @@ def check_profanity_transformer_chunked(text: str, language: str) -> Dict[str, A
             return result
     
     except Exception as e:
-        logger.error(f"Error in chunked transformer profanity check: {str(e)}")
+        logger.exception("Profanity processing error: pipeline failure.")
         return {
-            "status": "error",
-            "message": f"Chunked profanity check error: {str(e)}",
+            "status": "failed",
+            "message": f"Profanity filter processing failed. Please try again.",
             "responseData": None
         }
