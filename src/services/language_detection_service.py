@@ -154,8 +154,10 @@ def detect_language_service(text: str):
     """Enhanced language detection service using clean XLM-RoBERTa detection"""
 
     try:
+        sample_size = settings.LANGUAGE_DETECTION_SAMPLE_SIZE
+        lang_detection_sample = str(text)[:sample_size] if len(str(text)) > sample_size else str(text)
         detector = get_language_detector()
-        result = detector.detect(text)
+        result = detector.detect(lang_detection_sample)
         if 'error' in result:
             return {
                 "status": "error",

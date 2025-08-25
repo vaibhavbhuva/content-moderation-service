@@ -25,11 +25,12 @@ _transformer_models = {
 
 
 def _load_english_model():
-    """Load English profanity detection model"""
+    """Load English profanity detection model""" 
     if _transformer_models['english'] is not None:
         return _transformer_models['english']
         
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    logger.info(f"Using device: {device}")
     tokenizer = AutoTokenizer.from_pretrained(settings.ENGLISH_TRANSFORMER_MODEL)
     model = AutoModelForSequenceClassification.from_pretrained(settings.ENGLISH_TRANSFORMER_MODEL).to(device)
     id2label = model.config.id2label if hasattr(model.config, 'id2label') else {0: 'NOT_TOXIC', 1: 'TOXIC'}

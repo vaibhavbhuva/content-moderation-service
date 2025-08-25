@@ -159,6 +159,9 @@ Service running at: http://localhost:8000
 | | `LANGUAGE_DETECT_MODEL` | `string` | `"ZheYu03/xlm-r-langdetect-model"` | Language detection model |
 | | `HF_HUB_OFFLINE` | `integer` | `1` | Prevent Hugging Face Hub calls |
 | **Text Processing** | `MAX_TEXT_LENGTH` | `integer` | `500` | Max length before chunking |
+| | `CONTENT_TEXT_MIN_LENGTH` | `integer` | `2` | Minimum allowed characters for any API input text |
+| | `CONTENT_TEXT_MAX_LENGTH` | `integer` | `3000` | Maximum allowed characters for any API input text |
+| | `LANGUAGE_DETECTION_SAMPLE_SIZE` | `integer` | `300 ` | Number of characters sampled for language detection |
 | | `CHUNKING_ENABLED` | `boolean` | `true` | Enable automatic chunking |
 | | `CHUNK_SIZE` | `integer` | `500` | Tokens per chunk |
 | | `CHUNK_OVERLAP` | `integer` | `100` | Overlap between chunks |
