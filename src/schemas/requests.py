@@ -9,12 +9,13 @@ from .base import BaseModel
 from typing import Optional
 from pydantic import Field, validator
 from .base import BaseModel
+from src.core.config import settings
 
 class ProfanityCheckRequest(BaseModel):
     """Request model for profanity check endpoints."""
-    text: str = Field(..., min_length=1, max_length=15000, description="Text to check for profanity")
+    text: str = Field(..., min_length=settings.CONTENT_TEXT_MIN_LENGTH, max_length=settings.CONTENT_TEXT_MAX_LENGTH, description="Text to check for profanity")
     language: str = Field(
-        None,
+        ...,
         min_length=2,
         max_length=10,
         description="language hint for transformer models, using ISO 639-1 (e.g., 'hi', 'en')."
@@ -34,7 +35,7 @@ from .base import BaseModel
 
 class LanguageDetectionRequest(BaseModel):
     """Request model for language detection endpoint."""
-    text: str = Field(..., min_length=1, max_length=5000, description="Text for language detection")
+    text: str = Field(..., min_length=settings.CONTENT_TEXT_MIN_LENGTH, max_length=settings.CONTENT_TEXT_MAX_LENGTH, description="Text for language detection")
 
     @validator('text')
     def validate_text(cls, v):

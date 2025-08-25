@@ -40,10 +40,17 @@ class Settings(BaseSettings):
     
     # Model settings
     MAX_TEXT_LENGTH: int = 500
+
+    # General text length constraints (applies to multiple APIs)
+    CONTENT_TEXT_MIN_LENGTH: int = 2
+    CONTENT_TEXT_MAX_LENGTH: int = 3000
+
+    # Language Detection settings
+    LANGUAGE_DETECTION_SAMPLE_SIZE: int = 300  # characters to use for language detection
     
     # Text chunking settings
     CHUNKING_ENABLED: bool = True
-    CHUNK_SIZE: int = 500          # tokens per chunk
+    CHUNK_SIZE: int = 400          # tokens per chunk
     CHUNK_OVERLAP: int = 100       # overlap between chunks (tokens)
     MAX_CHUNKS_PER_TEXT: int = 10  # maximum chunks to process per text
 

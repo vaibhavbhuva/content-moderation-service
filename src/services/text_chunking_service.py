@@ -464,10 +464,10 @@ def chunk_text_service(text: str, strategy: str = "sliding_window") -> Dict[str,
         }
     
     except Exception as e:
-        logger.error(f"Error in text chunking service: {str(e)}")
+        logger.exception("Error: text chunk generation failed due to size/format issue.")
         return {
-            "status": "error",
-            "message": f"Text chunking error: {str(e)}",
+            "status": "failed",
+            "message": f"Unable to process text: chunking error.",
             "chunks": []
         }
 
